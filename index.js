@@ -41,10 +41,7 @@ class App {
 
   _setLocaleStorage() {
     // set values to local Storage
-    localStorage.setItem(
-      "todos",
-      JSON.stringify([...this.#inputValues].reverse())
-    );
+    localStorage.setItem("todos", JSON.stringify([...this.#inputValues]));
   }
 
   _renderMarkup(todo) {
@@ -59,9 +56,9 @@ class App {
 
   _getLocalStorage() {
     const data = JSON.parse(localStorage.getItem("todos"));
+    if (!data) return;
     data.forEach((el) => this._renderMarkup(el));
     this.#inputValues = data;
-    console.log(this.#inputValues);
   }
 
   _editTodo(e) {
@@ -94,9 +91,7 @@ class App {
   _fadeOutEffect(e) {
     e.preventDefault();
     var fadeTarget = e.target.closest(".todo");
-    console.log(e.target);
-    const self = this;
-    var fadeEffect = setInterval(function () {
+    var fadeEffect = setInterval(() => {
       if (!fadeTarget.style.opacity) {
         fadeTarget.style.opacity = 1;
       }
@@ -104,15 +99,12 @@ class App {
         fadeTarget.style.opacity -= 0.2;
       } else {
         clearInterval(fadeEffect);
-        console.log(fadeTarget.parentNode);
         fadeTarget.parentNode.removeChild(fadeTarget);
-        console.log(fadeTarget.firstElementChild);
-        console.log(this);
         // delete element from local storage and from array
-        self.#inputValues = self.#inputValues.filter(
+        this.#inputValues = this.#inputValues.filter(
           (el) => el.id !== fadeTarget.firstElementChild.dataset.id
         );
-        self._setLocaleStorage();
+        this._setLocaleStorage();
       }
     }, 50);
   }
